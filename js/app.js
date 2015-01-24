@@ -11,7 +11,6 @@
   var WhiskeyTango = function(options) {
     this.recognition = options.recognition;
     this.letterMap = options.letterMap;
-    this.currentLetterString = null;
   };
 
   WhiskeyTango.prototype = {
@@ -32,24 +31,29 @@
       letterEl.innerHTML = letter;
     },
 
-    guessLetter: function(guess) {
-      return !!guess.toLowerCase().match(this.currentLetterString);
+    _win: function() {
+      if (this.onWin) {
+        this.onWin.apply(this);
+      }
     },
 
-    startSpeechRecognitionFor: function(letterString) {
-      // start speech recognition and set the onresult function to
-      // call `guessLetter` with the result.
+    guessLetter: function(letterString, guess) {
+      return !!guess.toLowerCase().match(letterString);
+    },
+
+    startSpeechRecognitionFor: function(options) {
       var self = this;
 
       this.recognition.onresult = function(event) {
         console.log(event);
         for (var i = event.resultIndex; i < event.results.length; i++) {
+          var transcript = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
-            // self.outputSpeechResult(event.results[i][0].transcript);
+            // self.outputSpeechResult(transcript);
           } else {
-            self._outputSpeechResult(event.results[i][0].transcript);
-            if (self.guessLetter(event.results[i][0].transcript)) {
-              self._win(self.winCallback);
+            self._outputSpeechResult(transcript);
+            if (self.guessLetter(options.letterString, transcript)) {
+              self._win();
               break;
             }
           }
@@ -58,27 +62,19 @@
     },
 
     startSingleGame: function() {
-      this._won = false;
-      this._displayLetter(this.currentLetter);
-      this.currentLetter = this._getRandomLetter();
-      this.currentLetterString = this.letterMap[this.currentLetter];
+      var letter = this._getRandomLetter();
+      var letterString = this.letterMap[letter];
 
-      this.startSpeechRecognitionFor(this.currentLetterString);
-    },
-
-    _win: function(winCallback) {
-      if (!this._won) {
-        this._won = true;
-        if (winCallback) {
-          winCallback.apply(this);
-        }
-      }
+      this._displayLetter(letter);
+      this.startSpeechRecognitionFor({
+        letterString: letterString
+      });
     },
 
     startGame: function() {
       this.recognition.start();
       this.startSingleGame();
-      this.winCallback = this.startSingleGame;
+      this.onWin = this.startSingleGame;
     },
 
     endGame: function() {
