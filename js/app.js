@@ -48,12 +48,10 @@
       this.recognition.onresult = function(event) {
         console.log(event);
         var transcript;
-        var guessResult;
         for (var i = event.resultIndex; i < event.results.length; i++) {
           transcript = event.results[i][0].transcript;
           self._outputSpeechResult(transcript);
           if (!_won && self.guessLetter(options.letterString, transcript)) {
-            guessResult = 'Yes, ' + options.letterString + ' => ' + options.letter;
             self._win(options.letter, options.letterString);
             _won = true;
             break;
