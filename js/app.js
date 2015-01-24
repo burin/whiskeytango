@@ -1,8 +1,15 @@
 (function(){
-  var WhiskeyTango = function() {
+
+  var Recognition = function() {
     this.recognition = new webkitSpeechRecognition();
     this.recognition.continuous = true;
     this.recognition.interimResults = true;
+
+    return this.recognition;
+  };
+
+  var WhiskeyTango = function(options) {
+    this.recognition = options.recognition;
 
     this.currentLetterString = null;
     this.letterMap = {
@@ -106,14 +113,17 @@
 
   window.WhiskeyTango = WhiskeyTango;
 
-  var Game = new WhiskeyTango();
-
+  var Game = new WhiskeyTango({ recognition: new Recognition() });
 
   var startButton = document.getElementById('start');
-
+  var stopButton = document.getElementById('stop');
 
   startButton.addEventListener('click', function() {
     Game.startGame();
+  });
+
+  stopButton.addEventListener('click', function() {
+    Game.endGame();
   });
 
 })();
