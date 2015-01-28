@@ -3,14 +3,21 @@
 <head>
   <meta charset="utf-8">
   <title>Whiskey Tango Speech Reco</title>
+  <meta name="viewport" content="width=device-width">
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+  <link type="text/css" rel="stylesheet" href="css/app.css"  media="screen,projection"/>
 </head>
 <body>
-<h1>Whiskey Tango Speech Reco</h1>
-<button id="start">Start</button><button id="stop">Stop</button>
-<p>What's the word for:<p>
-<h2 id="letter"></h2>
-<h3>What are you saying?</h3>
-<p class="what" id="what"></p>
+<div class="app">
+  <p>Whiskey Tango Speech Reco</p>
+  <button id="start" class="btn-large waves-effect waves-light teal lighten-1">Start</button>
+  <button id="stop" class="btn-large">Stop</button>
+  <p>What's the word for:<p>
+    <h2 id="letter"></h2>
+    <p>What are you saying?</p>
+    <p class="what" id="what"></p>
+
+</div>
 
 <script src="js/app.js"></script>
 </body>
