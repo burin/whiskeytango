@@ -1,0 +1,23 @@
+{
+  "name": "whiskeytango",
+  "version": "0.0.1",
+  "description": "Whiskey Tango Speech Reco",
+  "main": "js/bundle.js",
+  "dependencies": {
+    "webpack": "^1.5.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/burin/whiskeytango.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/burin/whiskeytango/issues"
+  },
+  "homepage": "https://github.com/burin/whiskeytango"
+}
