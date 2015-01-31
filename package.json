@@ -4,6 +4,9 @@
   "description": "Whiskey Tango Speech Reco",
   "main": "js/bundle.js",
   "dependencies": {
+    "eventemitter": "^0.3.3",
+    "jsx-loader": "^0.12.2",
+    "react": "^0.12.2",
     "webpack": "^1.5.3"
   },
   "devDependencies": {},
