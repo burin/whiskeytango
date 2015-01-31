@@ -38,9 +38,37 @@ var Letter = React.createClass({
 var Progress = React.createClass({
   render: function() {
     var output;
-    if (this.props.letter) {
+    if (this.props.progress) {
       output = (
         <p>Matches: {this.props.progress}</p>
+      );
+    } else {
+      output = <p />;
+    }
+    return output;
+  }
+});
+
+var LastProgress = React.createClass({
+  render: function() {
+    var output;
+    if (this.props.progress) {
+      output = (
+        <p>Last Game # of Matches: {this.props.progress}</p>
+      );
+    } else {
+      output = <p />;
+    }
+    return output;
+  }
+});
+
+var Countdown = React.createClass({
+  render: function() {
+    var output;
+    if (this.props.countdown) {
+      output = (
+        <p>{this.props.countdown}</p>
       );
     } else {
       output = <p />;
@@ -55,7 +83,9 @@ var App = React.createClass({
       buttonText: 'Start',
       letter: '',
       output: '',
-      progress: 0
+      progress: 0,
+      countdown: 0,
+      lastProgress: 0
     };
   },
   componentDidMount: function() {
@@ -66,6 +96,7 @@ var App = React.createClass({
     this.game.on('result', this.recognitionHandler);
     this.game.on('letter', this.letterHandler);
     this.game.on('match', this.matchHandler);
+    this.game.on('countdown', this.countdownHandler);
   },
   toggleButton: function() {
     if(this.game.started) {
@@ -82,13 +113,14 @@ var App = React.createClass({
   },
   stopGame: function() {
     this.game.stopGame();
-    this.setState(this.getInitialState());
+    var newState = this.getInitialState();
+    newState.lastProgress = this.state.progress;
+    this.setState(newState);
   },
   matchHandler: function(match) {
     var newState = this.state;
     newState.output = '';
     newState.progress = this.state.progress += 1;
-    console.log('matched ' + match.letter + match.letterString);
   },
   recognitionHandler: function(recognition) {
     var newState = this.state;
@@ -100,13 +132,24 @@ var App = React.createClass({
     newState.letter = letter;
     this.setState(newState);
   },
+  countdownHandler: function(countdown) {
+    if (countdown === 0) {
+      this.stopGame();
+    } else{
+      var newState = this.state;
+      newState.countdown = countdown;
+      this.setState(newState);
+    }
+  },
   render: function() {
     return (
       <div className="app center">
         <p>Whiskey Tango Speech Reco</p>
         <ToggleButton onClick={this.toggleButton} buttonText={this.state.buttonText} />
         <Letter letter={this.state.letter} />
+        <Countdown countdown={this.state.countdown} />
         <Progress progress={this.state.progress} />
+        <LastProgress progress={this.state.lastProgress} />
         <SpeechOutput output={this.state.output} />
       </div>
     );

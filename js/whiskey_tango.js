@@ -67,9 +67,13 @@ WhiskeyTango.prototype.startSingleGame = function() {
 
 WhiskeyTango.prototype.startGame = function() {
   var self = this;
+  this.countdownTimer = 30;
   this.recognition.start();
   this.startSingleGame();
   this.started = true;
+  this.tick = setInterval(function() {
+    self.countdown();
+  }, 1000);
   this.onWin = function(letter, letterString) {
     self._displayLetter(letterString.toUpperCase());
     setTimeout(function() {
@@ -78,8 +82,14 @@ WhiskeyTango.prototype.startGame = function() {
   };
 };
 
+WhiskeyTango.prototype.countdown = function() {
+  this.countdownTimer = this.countdownTimer - 1;
+  this.emit('countdown', this.countdownTimer);
+};
+
 WhiskeyTango.prototype.stopGame = function() {
   this.started = false;
+  clearInterval(this.tick);
   this.recognition.stop();
 };
 

@@ -178,9 +178,13 @@
 
 	WhiskeyTango.prototype.startGame = function() {
 	  var self = this;
+	  this.countdownTimer = 30;
 	  this.recognition.start();
 	  this.startSingleGame();
 	  this.started = true;
+	  this.tick = setInterval(function() {
+	    self.countdown();
+	  }, 1000);
 	  this.onWin = function(letter, letterString) {
 	    self._displayLetter(letterString.toUpperCase());
 	    setTimeout(function() {
@@ -189,8 +193,14 @@
 	  };
 	};
 
+	WhiskeyTango.prototype.countdown = function() {
+	  this.countdownTimer = this.countdownTimer - 1;
+	  this.emit('countdown', this.countdownTimer);
+	};
+
 	WhiskeyTango.prototype.stopGame = function() {
 	  this.started = false;
+	  clearInterval(this.tick);
 	  this.recognition.stop();
 	};
 
@@ -241,9 +251,37 @@
 	var Progress = React.createClass({displayName: "Progress",
 	  render: function() {
 	    var output;
-	    if (this.props.letter) {
+	    if (this.props.progress) {
 	      output = (
 	        React.createElement("p", null, "Matches: ", this.props.progress)
+	      );
+	    } else {
+	      output = React.createElement("p", null);
+	    }
+	    return output;
+	  }
+	});
+
+	var LastProgress = React.createClass({displayName: "LastProgress",
+	  render: function() {
+	    var output;
+	    if (this.props.progress) {
+	      output = (
+	        React.createElement("p", null, "Last Game # of Matches: ", this.props.progress)
+	      );
+	    } else {
+	      output = React.createElement("p", null);
+	    }
+	    return output;
+	  }
+	});
+
+	var Countdown = React.createClass({displayName: "Countdown",
+	  render: function() {
+	    var output;
+	    if (this.props.countdown) {
+	      output = (
+	        React.createElement("p", null, this.props.countdown)
 	      );
 	    } else {
 	      output = React.createElement("p", null);
@@ -258,7 +296,9 @@
 	      buttonText: 'Start',
 	      letter: '',
 	      output: '',
-	      progress: 0
+	      progress: 0,
+	      countdown: 0,
+	      lastProgress: 0
 	    };
 	  },
 	  componentDidMount: function() {
@@ -269,6 +309,7 @@
 	    this.game.on('result', this.recognitionHandler);
 	    this.game.on('letter', this.letterHandler);
 	    this.game.on('match', this.matchHandler);
+	    this.game.on('countdown', this.countdownHandler);
 	  },
 	  toggleButton: function() {
 	    if(this.game.started) {
@@ -285,13 +326,14 @@
 	  },
 	  stopGame: function() {
 	    this.game.stopGame();
-	    this.setState(this.getInitialState());
+	    var newState = this.getInitialState();
+	    newState.lastProgress = this.state.progress;
+	    this.setState(newState);
 	  },
 	  matchHandler: function(match) {
 	    var newState = this.state;
 	    newState.output = '';
 	    newState.progress = this.state.progress += 1;
-	    console.log('matched ' + match.letter + match.letterString);
 	  },
 	  recognitionHandler: function(recognition) {
 	    var newState = this.state;
@@ -303,13 +345,24 @@
 	    newState.letter = letter;
 	    this.setState(newState);
 	  },
+	  countdownHandler: function(countdown) {
+	    if (countdown === 0) {
+	      this.stopGame();
+	    } else{
+	      var newState = this.state;
+	      newState.countdown = countdown;
+	      this.setState(newState);
+	    }
+	  },
 	  render: function() {
 	    return (
 	      React.createElement("div", {className: "app center"}, 
 	        React.createElement("p", null, "Whiskey Tango Speech Reco"), 
 	        React.createElement(ToggleButton, {onClick: this.toggleButton, buttonText: this.state.buttonText}), 
 	        React.createElement(Letter, {letter: this.state.letter}), 
+	        React.createElement(Countdown, {countdown: this.state.countdown}), 
 	        React.createElement(Progress, {progress: this.state.progress}), 
+	        React.createElement(LastProgress, {progress: this.state.lastProgress}), 
 	        React.createElement(SpeechOutput, {output: this.state.output})
 	      )
 	    );
