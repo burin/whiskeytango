@@ -26,10 +26,21 @@ var Letter = React.createClass({
   }
 });
 
+var Progress = React.createClass({
+  render: function() {
+    return (
+      <p>Matches: {this.props.progress}</p>
+    );
+  }
+});
+
 var App = React.createClass({
   getInitialState: function() {
     return {
-      buttonText: 'Start'
+      buttonText: 'Start',
+      letter: '',
+      output: '',
+      progress: 0
     };
   },
   componentDidMount: function() {
@@ -55,14 +66,13 @@ var App = React.createClass({
     this.setState(newState);
   },
   stopGame: function() {
-    var newState = this.state;
     this.game.stopGame();
-    newState.buttonText = 'Start';
-    newState.letter = '';
-    newState.output = '';
-    this.setState(newState);
+    this.setState(this.getInitialState());
   },
   matchHandler: function(match) {
+    var newState = this.state;
+    newState.output = '';
+    newState.progress = this.state.progress += 1;
     console.log('matched ' + match.letter + match.letterString);
   },
   recognitionHandler: function(recognition) {
@@ -82,7 +92,7 @@ var App = React.createClass({
         <ToggleButton onClick={this.toggleButton} buttonText={this.state.buttonText} />
         <p>What’s the word for:</p>
         <Letter letter={this.state.letter} />
-        <p>What are you saying?</p>
+        <Progress progress={this.state.progress} />
         <SpeechOutput output={this.state.output} />
       </div>
     );

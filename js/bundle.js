@@ -229,10 +229,21 @@
 	  }
 	});
 
+	var Progress = React.createClass({displayName: "Progress",
+	  render: function() {
+	    return (
+	      React.createElement("p", null, "Matches: ", this.props.progress)
+	    );
+	  }
+	});
+
 	var App = React.createClass({displayName: "App",
 	  getInitialState: function() {
 	    return {
-	      buttonText: 'Start'
+	      buttonText: 'Start',
+	      letter: '',
+	      output: '',
+	      progress: 0
 	    };
 	  },
 	  componentDidMount: function() {
@@ -258,14 +269,13 @@
 	    this.setState(newState);
 	  },
 	  stopGame: function() {
-	    var newState = this.state;
 	    this.game.stopGame();
-	    newState.buttonText = 'Start';
-	    newState.letter = '';
-	    newState.output = '';
-	    this.setState(newState);
+	    this.setState(this.getInitialState());
 	  },
 	  matchHandler: function(match) {
+	    var newState = this.state;
+	    newState.output = '';
+	    newState.progress = this.state.progress += 1;
 	    console.log('matched ' + match.letter + match.letterString);
 	  },
 	  recognitionHandler: function(recognition) {
@@ -285,7 +295,7 @@
 	        React.createElement(ToggleButton, {onClick: this.toggleButton, buttonText: this.state.buttonText}), 
 	        React.createElement("p", null, "What’s the word for:"), 
 	        React.createElement(Letter, {letter: this.state.letter}), 
-	        React.createElement("p", null, "What are you saying?"), 
+	        React.createElement(Progress, {progress: this.state.progress}), 
 	        React.createElement(SpeechOutput, {output: this.state.output})
 	      )
 	    );
