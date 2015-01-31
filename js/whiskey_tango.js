@@ -1,4 +1,4 @@
-var EventEmitter = require('../node_modules/eventemitter/index.js').EventEmitter;
+var EventEmitter = require('events').EventEmitter;
 
 var WhiskeyTango = function(options) {
   this.recognition = options.recognition;

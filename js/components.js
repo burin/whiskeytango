@@ -1,7 +1,7 @@
 var Recognition = require('./recognition.js');
 var LetterMap = require('./letter_map.js');
 var WhiskeyTango = require('./whiskey_tango.js');
-var React = require('../node_modules/react/dist/react.js');
+var React = require('react');
 
 var ToggleButton = React.createClass({
   render: function() {

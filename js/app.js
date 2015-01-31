@@ -1,10 +1,3 @@
 (function(){
-
-  var components = require('!jsx!./components.js');
-
-
-
-
-
-
+  var components = require('./components.js');
 })();

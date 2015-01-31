@@ -2,22 +2,33 @@
   "name": "whiskeytango",
   "version": "0.0.1",
   "description": "Whiskey Tango Speech Reco",
-  "main": "js/bundle.js",
+  "main": "js/app.js",
   "dependencies": {
-    "eventemitter": "^0.3.3",
-    "jsx-loader": "^0.12.2",
-    "react": "^0.12.2",
-    "webpack": "^1.5.3"
+    "react": "^0.12.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "browserify": "^6.2.0",
+    "envify": "^3.0.0",
+    "reactify": "^0.15.2",
+    "uglify-js": "~2.4.15",
+    "watchify": "^2.1.1"
+  },
   "scripts": {
+    "start": "watchify -o js/bundle.js -v -d .",
+    "build": "NODE_ENV=production browserify . | uglifyjs -cm > js/bundle.min.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/burin/whiskeytango.git"
   },
-  "author": "",
+  "browserify": {
+    "transform": [
+      "reactify",
+      "envify"
+    ]
+  },
+  "author": "burin",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/burin/whiskeytango/issues"
