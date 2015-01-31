@@ -1,84 +1,16 @@
-var Recognition = require('./recognition.js');
-var LetterMap = require('./letter_map.js');
-var WhiskeyTango = require('./whiskey_tango.js');
 var React = require('react');
+var Recognition = require('../recognition.js');
+var LetterMap = require('../letter_map.js');
+var WhiskeyTango = require('../whiskey_tango.js');
 
-var ToggleButton = React.createClass({
-  render: function() {
-    return (
-      <button onClick={this.props.onClick} className="btn-large">{this.props.buttonText}</button>
-    );
-  }
-});
+var ToggleButton = require('./toggle_button.react');
+var Letter = require('./letter.react');
+var Countdown = require('./countdown.react');
+var Progress = require('./progress.react');
+var LastProgress = require('./last_progress.react');
+var SpeechOutput = require('./speech_output.react');
 
-var SpeechOutput = React.createClass({
-  render: function() {
-    return (
-      <p className="what" id="what">{this.props.output}</p>
-    );
-  }
-});
-
-var Letter = React.createClass({
-  render: function() {
-    var output;
-    if (this.props.letter) {
-      output = (
-        <div>
-          <p>What’s the word for:</p>
-          <h2 id="letter">{this.props.letter}</h2>
-        </div>
-      );
-    } else {
-      output = <div />;
-    }
-    return output;
-  }
-});
-
-var Progress = React.createClass({
-  render: function() {
-    var output;
-    if (this.props.progress) {
-      output = (
-        <p>Matches: {this.props.progress}</p>
-      );
-    } else {
-      output = <p />;
-    }
-    return output;
-  }
-});
-
-var LastProgress = React.createClass({
-  render: function() {
-    var output;
-    if (this.props.progress) {
-      output = (
-        <p>Last Game # of Matches: {this.props.progress}</p>
-      );
-    } else {
-      output = <p />;
-    }
-    return output;
-  }
-});
-
-var Countdown = React.createClass({
-  render: function() {
-    var output;
-    if (this.props.countdown) {
-      output = (
-        <p>{this.props.countdown}</p>
-      );
-    } else {
-      output = <p />;
-    }
-    return output;
-  }
-});
-
-var App = React.createClass({
+var WhiskeyTangoApp = React.createClass({
   getInitialState: function() {
     return {
       buttonText: 'Start',
@@ -157,9 +89,5 @@ var App = React.createClass({
   }
 });
 
-React.render(
-  <App />,
-  document.getElementById('content')
-);
 
-module.exports = {};
+module.exports = WhiskeyTangoApp;
