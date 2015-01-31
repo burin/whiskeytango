@@ -223,17 +223,32 @@
 
 	var Letter = React.createClass({displayName: "Letter",
 	  render: function() {
-	    return (
-	      React.createElement("h2", {id: "letter"}, this.props.letter)
-	    );
+	    var output;
+	    if (this.props.letter) {
+	      output = (
+	        React.createElement("div", null, 
+	          React.createElement("p", null, "What’s the word for:"), 
+	          React.createElement("h2", {id: "letter"}, this.props.letter)
+	        )
+	      );
+	    } else {
+	      output = React.createElement("div", null);
+	    }
+	    return output;
 	  }
 	});
 
 	var Progress = React.createClass({displayName: "Progress",
 	  render: function() {
-	    return (
-	      React.createElement("p", null, "Matches: ", this.props.progress)
-	    );
+	    var output;
+	    if (this.props.letter) {
+	      output = (
+	        React.createElement("p", null, "Matches: ", this.props.progress)
+	      );
+	    } else {
+	      output = React.createElement("p", null);
+	    }
+	    return output;
 	  }
 	});
 
@@ -293,7 +308,6 @@
 	      React.createElement("div", {className: "app center"}, 
 	        React.createElement("p", null, "Whiskey Tango Speech Reco"), 
 	        React.createElement(ToggleButton, {onClick: this.toggleButton, buttonText: this.state.buttonText}), 
-	        React.createElement("p", null, "What’s the word for:"), 
 	        React.createElement(Letter, {letter: this.state.letter}), 
 	        React.createElement(Progress, {progress: this.state.progress}), 
 	        React.createElement(SpeechOutput, {output: this.state.output})

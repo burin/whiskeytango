@@ -20,17 +20,32 @@ var SpeechOutput = React.createClass({
 
 var Letter = React.createClass({
   render: function() {
-    return (
-      <h2 id="letter">{this.props.letter}</h2>
-    );
+    var output;
+    if (this.props.letter) {
+      output = (
+        <div>
+          <p>What’s the word for:</p>
+          <h2 id="letter">{this.props.letter}</h2>
+        </div>
+      );
+    } else {
+      output = <div />;
+    }
+    return output;
   }
 });
 
 var Progress = React.createClass({
   render: function() {
-    return (
-      <p>Matches: {this.props.progress}</p>
-    );
+    var output;
+    if (this.props.letter) {
+      output = (
+        <p>Matches: {this.props.progress}</p>
+      );
+    } else {
+      output = <p />;
+    }
+    return output;
   }
 });
 
@@ -90,7 +105,6 @@ var App = React.createClass({
       <div className="app center">
         <p>Whiskey Tango Speech Reco</p>
         <ToggleButton onClick={this.toggleButton} buttonText={this.state.buttonText} />
-        <p>What’s the word for:</p>
         <Letter letter={this.state.letter} />
         <Progress progress={this.state.progress} />
         <SpeechOutput output={this.state.output} />
