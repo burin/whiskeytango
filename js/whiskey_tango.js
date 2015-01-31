@@ -23,6 +23,10 @@ WhiskeyTango.prototype._displayLetter = function(letter) {
 };
 
 WhiskeyTango.prototype._win = function(letter, letterString) {
+  this.emit('match', {
+    letter: letter,
+    letterString: letterString
+  });
   if (this.onWin) {
     this.onWin.apply(this, [letter, letterString]);
   }

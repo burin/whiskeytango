@@ -36,9 +36,7 @@ var Letter = React.createClass({
 
 var App = React.createClass({
   getInitialState: function() {
-    return {
-
-    };
+    return {};
   },
   componentDidMount: function() {
     this.game = new WhiskeyTango({
@@ -47,12 +45,16 @@ var App = React.createClass({
     });
     this.game.on('result', this.recognitionHandler);
     this.game.on('letter', this.letterHandler);
+    this.game.on('match', this.matchHandler);
   },
   startHandler: function() {
     this.game.startGame();
   },
   stopHandler: function() {
     this.game.stopGame();
+  },
+  matchHandler: function(match) {
+    console.log('matched ' + match.letter + match.letterString);
   },
   recognitionHandler: function(recognition) {
     var state = this.state;
@@ -67,7 +69,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div className="app">
-        <p>Whiskey Tango SpesasdasechReco</p>
+        <p>Whiskey Tango Speech Reco</p>
         <StartButton onClick={this.startHandler} />
         <StopButton onClick={this.stopHandler} />
         <p>What’s the word for:</p>

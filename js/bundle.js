@@ -134,6 +134,10 @@
 	};
 
 	WhiskeyTango.prototype._win = function(letter, letterString) {
+	  this.emit('match', {
+	    letter: letter,
+	    letterString: letterString
+	  });
 	  if (this.onWin) {
 	    this.onWin.apply(this, [letter, letterString]);
 	  }
@@ -233,9 +237,7 @@
 
 	var App = React.createClass({displayName: "App",
 	  getInitialState: function() {
-	    return {
-
-	    };
+	    return {};
 	  },
 	  componentDidMount: function() {
 	    this.game = new WhiskeyTango({
@@ -244,12 +246,16 @@
 	    });
 	    this.game.on('result', this.recognitionHandler);
 	    this.game.on('letter', this.letterHandler);
+	    this.game.on('match', this.matchHandler);
 	  },
 	  startHandler: function() {
 	    this.game.startGame();
 	  },
 	  stopHandler: function() {
 	    this.game.stopGame();
+	  },
+	  matchHandler: function(match) {
+	    console.log('matched ' + match.letter + match.letterString);
 	  },
 	  recognitionHandler: function(recognition) {
 	    var state = this.state;
@@ -264,7 +270,7 @@
 	  render: function() {
 	    return (
 	      React.createElement("div", {className: "app"}, 
-	        React.createElement("p", null, "Whiskey Tango SpesasdasechReco"), 
+	        React.createElement("p", null, "Whiskey Tango Speech Reco"), 
 	        React.createElement(StartButton, {onClick: this.startHandler}), 
 	        React.createElement(StopButton, {onClick: this.stopHandler}), 
 	        React.createElement("p", null, "What’s the word for:"), 
