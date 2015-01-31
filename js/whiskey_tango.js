@@ -69,6 +69,7 @@ WhiskeyTango.prototype.startGame = function() {
   var self = this;
   this.recognition.start();
   this.startSingleGame();
+  this.started = true;
   this.onWin = function(letter, letterString) {
     self._displayLetter(letterString.toUpperCase());
     setTimeout(function() {
@@ -78,6 +79,7 @@ WhiskeyTango.prototype.startGame = function() {
 };
 
 WhiskeyTango.prototype.stopGame = function() {
+  this.started = false;
   this.recognition.stop();
 };
 

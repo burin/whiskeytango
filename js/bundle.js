@@ -180,6 +180,7 @@
 	  var self = this;
 	  this.recognition.start();
 	  this.startSingleGame();
+	  this.started = true;
 	  this.onWin = function(letter, letterString) {
 	    self._displayLetter(letterString.toUpperCase());
 	    setTimeout(function() {
@@ -189,6 +190,7 @@
 	};
 
 	WhiskeyTango.prototype.stopGame = function() {
+	  this.started = false;
 	  this.recognition.stop();
 	};
 
@@ -203,18 +205,10 @@
 	var LetterMap = __webpack_require__(2);
 	var WhiskeyTango = __webpack_require__(3);
 
-	var StartButton = React.createClass({displayName: "StartButton",
+	var ToggleButton = React.createClass({displayName: "ToggleButton",
 	  render: function() {
 	    return (
-	      React.createElement("button", {onClick: this.props.onClick, className: "btn-large waves-effect waves-light teal lighten-1"}, "Start")
-	    );
-	  }
-	});
-
-	var StopButton = React.createClass({displayName: "StopButton",
-	  render: function() {
-	    return (
-	      React.createElement("button", {onClick: this.props.onClick, className: "btn-large"}, "Stop")
+	      React.createElement("button", {onClick: this.props.onClick, className: "btn-large"}, this.props.buttonText)
 	    );
 	  }
 	});
@@ -237,7 +231,9 @@
 
 	var App = React.createClass({displayName: "App",
 	  getInitialState: function() {
-	    return {};
+	    return {
+	      buttonText: 'Start'
+	    };
 	  },
 	  componentDidMount: function() {
 	    this.game = new WhiskeyTango({
@@ -248,31 +244,45 @@
 	    this.game.on('letter', this.letterHandler);
 	    this.game.on('match', this.matchHandler);
 	  },
-	  startHandler: function() {
-	    this.game.startGame();
+	  toggleButton: function() {
+	    if(this.game.started) {
+	      this.stopGame();
+	    } else {
+	      this.startGame();
+	    }
 	  },
-	  stopHandler: function() {
+	  startGame: function() {
+	    var newState = this.state;
+	    this.game.startGame();
+	    newState.buttonText = 'Stop';
+	    this.setState(newState);
+	  },
+	  stopGame: function() {
+	    var newState = this.state;
 	    this.game.stopGame();
+	    newState.buttonText = 'Start';
+	    newState.letter = '';
+	    newState.output = '';
+	    this.setState(newState);
 	  },
 	  matchHandler: function(match) {
 	    console.log('matched ' + match.letter + match.letterString);
 	  },
 	  recognitionHandler: function(recognition) {
-	    var state = this.state;
-	    state.output = recognition;
-	    this.setState(state);
+	    var newState = this.state;
+	    newState.output = recognition;
+	    this.setState(newState);
 	  },
 	  letterHandler: function(letter) {
-	    var state = this.state;
-	    state.letter = letter;
-	    this.setState(state);
+	    var newState = this.state;
+	    newState.letter = letter;
+	    this.setState(newState);
 	  },
 	  render: function() {
 	    return (
-	      React.createElement("div", {className: "app"}, 
+	      React.createElement("div", {className: "app center"}, 
 	        React.createElement("p", null, "Whiskey Tango Speech Reco"), 
-	        React.createElement(StartButton, {onClick: this.startHandler}), 
-	        React.createElement(StopButton, {onClick: this.stopHandler}), 
+	        React.createElement(ToggleButton, {onClick: this.toggleButton, buttonText: this.state.buttonText}), 
 	        React.createElement("p", null, "What’s the word for:"), 
 	        React.createElement(Letter, {letter: this.state.letter}), 
 	        React.createElement("p", null, "What are you saying?"), 
